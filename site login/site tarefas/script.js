@@ -11,17 +11,18 @@ if (email !== null) {
 
 // Fazer uma requisição para o backend
 fetch("/getId", {
-  method: "POST",
+  method: "POST", // Método HTTP para a requisição
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json", // Tipo de conteúdo da requisição
   },
-  body: JSON.stringify({ email: email }),
+  body: JSON.stringify({ email: email }), // Corpo da requisição com o email em formato JSON
 })
   .then((response) => {
     if (!response.ok) {
+      // Verificar se a resposta não foi bem-sucedida
       throw new Error("Erro ao buscar ID do usuário");
     }
-    return response.json();
+    return response.json(); // Converter a resposta em JSON
   })
   .then((data) => {
     // ID do usuário retornado pelo servidor
@@ -29,59 +30,65 @@ fetch("/getId", {
     console.log("ID do usuário:", userId);
 
     // Define a variável de modo de operação
-    let modo = userId; // 1 para soma, 2 para subtração, qualquer outro para divisão
+    let modo = userId; // Definindo a variável "modo" como o ID do usuário (1 para soma, 2 para subtração, qualquer outro para divisão)
 
     // Função para habilitar o botão correto com base no modo de operação
     function updateButtonState() {
-      document.getElementById("addBtn").disabled = modo !== 1;
-      document.getElementById("subtractBtn").disabled = modo !== 2;
-      document.getElementById("divideBtn").disabled = modo === 1 || modo === 2;
+      document.getElementById("addBtn").disabled = modo !== 1; // Desabilita o botão de adicionar se modo não for 1
+      document.getElementById("subtractBtn").disabled = modo !== 2; // Desabilita o botão de subtrair se modo não for 2
+      document.getElementById("divideBtn").disabled = modo === 1 || modo === 2; // Desabilita o botão de dividir se modo for 1 ou 2
     }
 
     // Atualiza o estado dos botões ao carregar a página
     updateButtonState();
   })
   .catch((error) => {
-    console.error("Erro ao buscar ID do usuário:", error);
-    alert("Ocorreu um erro ao buscar o ID do usuário.");
+    console.error("Erro ao buscar ID do usuário:", error); // Log de erro
+    alert("Ocorreu um erro ao buscar o ID do usuário."); // Alerta de erro
   });
 
 function calculate(operation) {
-  const num1 = parseFloat(document.getElementById("num1").value);
-  const num2 = parseFloat(document.getElementById("num2").value);
+  const num1 = parseFloat(document.getElementById("num1").value); // Pega o valor do primeiro número e converte para float
+  const num2 = parseFloat(document.getElementById("num2").value); // Pega o valor do segundo número e converte para float
   let result;
 
   if (isNaN(num1) || isNaN(num2)) {
+    // Verifica se os números são válidos
     result = "Por favor, insira números válidos.";
   } else {
     switch (operation) {
       case "add":
         if (modo === 1) {
-          result = num1 + num2;
+          // Verifica se o modo é 1 (soma)
+          result = num1 + num2; // Faz a soma
         } else {
-          result = "Operação não permitida.";
+          result = "Operação não permitida."; // Mensagem de operação não permitida
         }
         break;
       case "subtract":
         if (operationMode === 2) {
-          result = num1 - num2;
+          // Verifica se o modo é 2 (subtração)
+          result = num1 - num2; // Faz a subtração
         } else {
-          result = "Operação não permitida.";
+          result = "Operação não permitida."; // Mensagem de operação não permitida
         }
         break;
       case "divide":
         if (modo !== 1 && modo !== 2) {
+          // Verifica se o modo não é 1 nem 2 (divisão permitida)
           if (num2 === 0) {
-            result = "Divisão por zero não é permitida.";
+            // Verifica se o divisor é zero
+            result = "Divisão por zero não é permitida."; // Mensagem de erro para divisão por zero
           } else {
-            result = num1 / num2;
+            result = num1 / num2; // Faz a divisão
           }
         } else {
-          result = "Operação não permitida.";
+          result = "Operação não permitida."; // Mensagem de operação não permitida
         }
         break;
     }
   }
 
+  // Exibe o resultado na página
   document.getElementById("result").innerText = "Resultado: " + result;
 }
