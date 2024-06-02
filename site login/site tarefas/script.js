@@ -48,6 +48,8 @@ function updateButtonState() {
   document.getElementById("addBtn").disabled = modo !== 1; // Desabilita o botão de adicionar se modo não for 1
   document.getElementById("subtractBtn").disabled = modo !== 2; // Desabilita o botão de subtrair se modo não for 2
   document.getElementById("divideBtn").disabled = modo === 1 || modo === 2; // Desabilita o botão de dividir se modo for 1 ou 2
+  document.getElementById("loadBtn").disabled = modo > 2;
+  document.getElementById("saveBtn").disabled = modo > 1;
 }
 
 function calculate(operation) {
