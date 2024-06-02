@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Básica</title>
-    <link rel="stylesheet" href="\site tarefas\style.css">
+    <title>Calculadora Básica e Editor de Arquivo</title>
+    <link rel="stylesheet" href="/site tarefas/style.css">
 </head>
 <body>
     <div class="container">
@@ -17,8 +17,15 @@
             <button id="divideBtn" onclick="calculate('divide')" disabled>Dividir</button>
         </div>
         <div id="result"></div>
+
+        <h2>Editor de Arquivo de Texto</h2>
+        <textarea id="fileContent" rows="10" cols="50" placeholder="Conteúdo do arquivo..."></textarea>
+        <div class="buttons">
+            <button onclick="loadFile()">Carregar Arquivo</button>
+            <button onclick="saveFile()">Salvar Arquivo</button>
+        </div>
     </div>
 
-    <script src="\site tarefas\script.js"></script>
+    <script src="/site tarefas/script.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
 const Cad = require("./modules/Cad");
@@ -21,6 +22,31 @@ app.post("/add", function (req, res) {
     password: salt + req.body.password,
   }).catch(function (erro) {
     res.send("Houve um erro: " + erro);
+  });
+});
+
+//rota carregar arquivo
+app.get("/loadFile", (req, res) => {
+  const filePath = path.join(__dirname, "file.txt"); // Caminho do arquivo
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Erro ao carregar o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao carregar o arquivo" });
+    }
+    res.send(data); // Envia o conteúdo do arquivo como resposta
+  });
+});
+
+//rota para salvar o arquivo
+app.post("/saveFile", (req, res) => {
+  const content = req.body.content;
+  const filePath = path.join(__dirname, "file.txt"); // Caminho do arquivo
+  fs.writeFile(filePath, content, "utf8", (err) => {
+    if (err) {
+      console.error("Erro ao salvar o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao salvar o arquivo" });
+    }
+    res.sendStatus(200); // Envia uma resposta de sucesso
   });
 });
 
