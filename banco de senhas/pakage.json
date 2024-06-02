@@ -1,0 +1,5 @@
+{
+"name": "gerar-senhas",
+"version": "1.0.0",
+"dependences":{"crypto":"ˆ1.0.1"}
+}

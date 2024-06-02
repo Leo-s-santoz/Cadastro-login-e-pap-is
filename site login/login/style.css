@@ -1,0 +1,76 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "roboto", sans-serif;
+}
+body {
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  form {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    margin-top: 20px;
+  }
+  
+  div {
+    margin: 10px 0;
+  }
+  
+  label {
+    font-weight: bold;
+    display: block;
+  }ç
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  small {
+    color: #ff3333;
+    display: block;
+    margin-top: 4px;
+  }
+  
+  button {
+    background-color: #4caf50;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Responsividade para telas pequenas */
+  @media screen and (max-width: 600px) {
+    form {
+      max-width: 100%;
+    }
+  }
+  
