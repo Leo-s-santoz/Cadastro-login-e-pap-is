@@ -50,6 +50,31 @@ app.post("/saveFile", (req, res) => {
   });
 });
 
+//rota carregar arquivo 2
+app.get("/loadFile2", (req, res) => {
+  const filePath = path.join(__dirname, "file2.txt"); // Caminho do arquivo
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Erro ao carregar o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao carregar o arquivo" });
+    }
+    res.send(data); // Envia o conteúdo do arquivo como resposta
+  });
+});
+
+//rota para salvar o arquivo 2
+app.post("/saveFile2", (req, res) => {
+  const content = req.body.content;
+  const filePath = path.join(__dirname, "file2.txt"); // Caminho do arquivo
+  fs.writeFile(filePath, content, "utf8", (err) => {
+    if (err) {
+      console.error("Erro ao salvar o arquivo:", err);
+      return res.status(500).json({ error: "Erro ao salvar o arquivo" });
+    }
+    res.sendStatus(200); // Envia uma resposta de sucesso
+  });
+});
+
 //rota pegar ID
 app.post("/getId", async (req, res) => {
   const { email } = req.body;

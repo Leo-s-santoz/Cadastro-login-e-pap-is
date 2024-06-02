@@ -16,9 +16,9 @@ let modo;
 fetch("/getId", {
   method: "POST", // Método HTTP para a requisição
   headers: {
-    "Content-Type": "application/json", // Tipo de conteúdo da requisição
+    "Content-Type": "application/json",
   },
-  body: JSON.stringify({ email: email }), // Corpo da requisição com o email em formato JSON
+  body: JSON.stringify({ email: email }), //muda para string
 })
   .then((response) => {
     if (!response.ok) {
@@ -32,8 +32,8 @@ fetch("/getId", {
     const userId = data.userId;
     console.log("ID do usuário:", userId);
 
-    // Define a variável de modo de operação
-    modo = userId; // Definindo a variável "modo" como o ID do usuário (1 para soma, 2 para subtração, qualquer outro para divisão)
+    // usa o ID para definir o modo
+    modo = userId;
 
     // Atualiza o estado dos botões ao carregar a página
     updateButtonState();
@@ -45,16 +45,18 @@ fetch("/getId", {
 
 // Função para habilitar o botão correto com base no modo de operação
 function updateButtonState() {
-  document.getElementById("addBtn").disabled = modo !== 1; // Desabilita o botão de adicionar se modo não for 1
-  document.getElementById("subtractBtn").disabled = modo !== 2; // Desabilita o botão de subtrair se modo não for 2
-  document.getElementById("divideBtn").disabled = modo === 1 || modo === 2; // Desabilita o botão de dividir se modo for 1 ou 2
+  document.getElementById("addBtn").disabled = modo !== 1;
+  document.getElementById("subtractBtn").disabled = modo !== 2;
+  document.getElementById("divideBtn").disabled = modo === 1 || modo === 2;
   document.getElementById("loadBtn").disabled = modo > 2;
   document.getElementById("saveBtn").disabled = modo > 1;
+  document.getElementById("saveBtn2").disabled = modo !== 2;
 }
 
 function calculate(operation) {
-  const num1 = parseFloat(document.getElementById("num1").value); // Pega o valor do primeiro número e converte para float
-  const num2 = parseFloat(document.getElementById("num2").value); // Pega o valor do segundo número e converte para float
+  //converte valores pra float
+  const num1 = parseFloat(document.getElementById("num1").value);
+  const num2 = parseFloat(document.getElementById("num2").value);
   let result;
 
   if (isNaN(num1) || isNaN(num2)) {
@@ -63,32 +65,31 @@ function calculate(operation) {
   } else {
     switch (operation) {
       case "add":
+        // Verifica o modo
         if (modo === 1) {
-          // Verifica se o modo é 1 (soma)
-          result = num1 + num2; // Faz a soma
+          result = num1 + num2;
         } else {
-          result = "Operação não permitida."; // Mensagem de operação não permitida
+          result = "Operação não permitida."; //mensagem caso tenha um erro na operação
         }
         break;
       case "subtract":
         if (modo === 2) {
-          // Verifica se o modo é 2 (subtração)
-          result = num1 - num2; // Faz a subtração
+          result = num1 - num2;
         } else {
-          result = "Operação não permitida."; // Mensagem de operação não permitida
+          result = "Operação não permitida.";
         }
         break;
       case "divide":
         if (modo !== 1 && modo !== 2) {
-          // Verifica se o modo não é 1 nem 2 (divisão permitida)
+          // Verifica se o modo não é 1 nem 2
           if (num2 === 0) {
             // Verifica se o divisor é zero
             result = "Divisão por zero não é permitida."; // Mensagem de erro para divisão por zero
           } else {
-            result = num1 / num2; // Faz a divisão
+            result = num1 / num2;
           }
         } else {
-          result = "Operação não permitida."; // Mensagem de operação não permitida
+          result = "Operação não permitida.";
         }
         break;
     }
@@ -99,7 +100,48 @@ function calculate(operation) {
 }
 
 function loadFile() {
-  fetch("/loadFile")
+  if (modo <= 2) {
+    fetch("/loadFile")
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("fileContent").value = data; // Coloca o conteúdo do arquivo na textarea
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar o arquivo:", error);
+        alert("Erro ao carregar o arquivo.");
+      });
+  } else {
+    alert("Operação não permitida no modo atual.");
+  }
+}
+
+function saveFile() {
+  if ((modo = 1)) {
+    const content = document.getElementById("fileContent").value; // Pega o conteúdo da textarea
+    fetch("/saveFile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: content }), // Envia o conteúdo como JSON
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao salvar o arquivo");
+        }
+        alert("Arquivo salvo com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao salvar o arquivo:", error);
+        alert("Erro ao salvar o arquivo.");
+      });
+  } else {
+    alert("Operação não permitida no modo atual.");
+  }
+}
+
+function loadFile2() {
+  fetch("/loadFile2")
     .then((response) => response.text())
     .then((data) => {
       document.getElementById("fileContent").value = data; // Coloca o conteúdo do arquivo na textarea
@@ -110,23 +152,27 @@ function loadFile() {
     });
 }
 
-function saveFile() {
-  const content = document.getElementById("fileContent").value; // Pega o conteúdo da textarea
-  fetch("/saveFile", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ content: content }), // Envia o conteúdo como JSON
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erro ao salvar o arquivo");
-      }
-      alert("Arquivo salvo com sucesso!");
+function saveFile2() {
+  if ((modo = 2)) {
+    const content = document.getElementById("fileContent").value; // Pega o conteúdo da textarea
+    fetch("/saveFile2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: content }), // Envia o conteúdo como JSON
     })
-    .catch((error) => {
-      console.error("Erro ao salvar o arquivo:", error);
-      alert("Erro ao salvar o arquivo.");
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao salvar o arquivo");
+        }
+        alert("Arquivo salvo com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao salvar o arquivo:", error);
+        alert("Erro ao salvar o arquivo.");
+      });
+  } else {
+    alert("Operação não permitida no modo atual.");
+  }
 }
