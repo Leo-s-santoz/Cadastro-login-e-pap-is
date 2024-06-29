@@ -1,10 +1,12 @@
 const express = require("express");
+const nodemailer = require("nodemailer");
 const app = express();
 const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
 const Cad = require("./modules/Cad");
 const genetateRandomSalt = require("./modules/generateRandomSalt");
+
 //bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -114,10 +116,6 @@ app.post("/login", async (req, res) => {
       // Comparar a senha fornecida com a senha armazenada no banco de dados
       if (cadastro.password == cadastro.salt + req.body.password) {
         // Senha válida, login bem-sucedido
-        console.log(
-          "comp",
-          cadastro.password == cadastro.salt + req.body.password
-        );
         res.status(200).send("Login bem-sucedido!");
       } else {
         // Senha inválida
@@ -130,6 +128,46 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Erro ao fazer login:", error);
     return res.status(500).send("Erro interno do servidor");
+  }
+});
+
+//rota 2FA
+app.get("/autenticacao", (req, res) => {
+  res.sendFile(path.join(__dirname, "site 2fa", "index.html"));
+});
+
+// Rota para enviar o email
+app.post("/enviarCodigo", async (req, res) => {
+  const { email, codigo } = req.body;
+
+  const SMTP_CONFIG = require("./smtp");
+
+  const transporter = nodemailer.createTransport({
+    host: SMTP_CONFIG.host,
+    port: SMTP_CONFIG.port,
+    secure: false,
+    auth: {
+      user: SMTP_CONFIG.user,
+      pass: SMTP_CONFIG.pass,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  try {
+    let info = await transporter.sendMail({
+      from: "2FA <testesdoleo689@outlook.com>",
+      to: email,
+      subject: "Seu Código de Verificação",
+      text: `Código de verificação: ${codigo}`,
+    });
+
+    console.log("Email enviado: %s", info.messageId);
+    res.send({ message: "Código enviado com sucesso!", codigo });
+  } catch (error) {
+    console.error("Erro ao enviar email:", error);
+    res.status(500).send({ message: "Erro ao enviar o código" });
   }
 });
 

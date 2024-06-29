@@ -35,7 +35,7 @@ form.addEventListener("submit", (e) => {
     .then((data) => {
       alert("Login bem-sucedido!");
       localStorage.setItem("email", email);
-      window.location.href = "http://localhost:3036/tarefas";
+      window.location.href = "http://localhost:3036/autenticacao";
     })
 
     .catch((error) => {
